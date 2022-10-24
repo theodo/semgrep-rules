@@ -1,0 +1,22 @@
+rules:
+  - id: next_open_redirect
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $ROUTER.push($ROUTER.query.$QUERY_PARAMS);
+          - pattern: |
+              const $VAR = $ROUTER.query.$QUERY_PARAMS;
+              ...
+              $ROUTER.push($VAR);
+          - pattern: |
+              const $VAR = $CHECK ? $ROUTER.query.$QUERY_PARAMS : $OTHER_VALUE;
+              ...
+              $ROUTER.push($VAR);
+      - metavariable-regex:
+          metavariable: "$QUERY_PARAMS"
+          regex: ".*(url|redirect|next).*"
+
+    message: Open Redirect
+    languages:
+      - typescript
+    severity: ERROR
